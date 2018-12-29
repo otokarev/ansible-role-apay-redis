@@ -1,0 +1,19 @@
+- name: Deploy Papaya Redis
+  include_role:
+    name: k8s/utils/kubectl-create-or-replace
+  vars:
+    controller_kind: deploy
+    controller_name: "{{redis_app_name}}"
+    controller_template: redis-deploy.yaml.j2
+- name: Deploy Papaya Redis service
+  include_role:
+    name: k8s/simsvc
+  vars:
+    simsvc_name: "{{redis_app_name}}"
+    simsvc_selector_app: "{{redis_app_name}}"
+    simsvc_ports:
+      - protocol: TCP
+        port: 6379
+        targetPort: redis
+        name: redis
+

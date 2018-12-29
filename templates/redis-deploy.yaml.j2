@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{redis_app_name}}"
+  labels:
+    app: "{{redis_app_name}}"
+spec:
+  selector:
+    matchLabels:
+      app: "{{redis_app_name}}"
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: "{{redis_app_name}}"
+        role: "{{redis_app_role}}"
+    spec:
+      nodeSelector:
+        failure-domain.beta.kubernetes.io/zone: "{{zone}}"
+      containers:
+      - name: papaya-bot
+        image: "{{redis_image}}"
+        args:
+          - "redis-server"
+          - "--appendonly"
+          - "yes"
+        ports:
+        - containerPort: 6379
+          name: redis
+        volumeMounts:
+          - name: data
+            mountPath: /data
+      volumes:
+        - name: data
+          gcePersistentDisk:
+            pdName: "{{redis_volume}}"
+            fsType: ext4
