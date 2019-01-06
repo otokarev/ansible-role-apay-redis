@@ -33,9 +33,9 @@ spec:
           name: redis
 {% if redis_volume is defined %}
         volumeMounts:
-          - name: data
-            mountPath: /data
-     volumes:
+        - name: data
+          mountPath: /data
+      volumes:
         - name: data
           gcePersistentDisk:
             pdName: "{{redis_volume}}"
