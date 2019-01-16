@@ -1,1 +1,2 @@
 redis_image: redis:5.0-alpine
+redis_appendonly: "yes"
